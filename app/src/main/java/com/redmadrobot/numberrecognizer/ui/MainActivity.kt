@@ -1,8 +1,8 @@
-package com.redmadrobot.numberrecognizer
+package com.redmadrobot.numberrecognizer.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.redmadrobot.numberrecognizer.ui.RecognitionFragment
+import com.redmadrobot.numberrecognizer.R
 
 class MainActivity : AppCompatActivity() {
 

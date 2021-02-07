@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">NumberRecognizer</string>
+    <string name="flashlight">Flashlight</string>
+    <string name="capture">Capture</string>
 </resources>

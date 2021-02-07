@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menuFlash"
+        android:icon="@drawable/ic_flash_off"
+        android:title="@string/flashlight"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/menuCapture"
+        android:icon="@drawable/ic_capture"
+        android:title="@string/capture"
+        app:showAsAction="always" />
+</menu>
