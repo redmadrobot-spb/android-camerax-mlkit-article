@@ -1,4 +1,4 @@
-package com.redmadrobot.numberrecognizer.ui.main
+package com.redmadrobot.numberrecognizer.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,13 +8,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.redmadrobot.numberrecognizer.R
 
-class MainFragment : Fragment() {
+class RecognitionFragment : Fragment() {
 
-    companion object {
-        fun newInstance() = MainFragment()
-    }
-
-    private lateinit var viewModel: MainViewModel
+    private lateinit var viewModel: RecognitionViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -23,8 +19,16 @@ class MainFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-        // TODO: Use the ViewModel
+        viewModel = ViewModelProvider(this).get(RecognitionViewModel::class.java)
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+
+    }
+
+    companion object {
+        fun newInstance() = RecognitionFragment()
+    }
 }

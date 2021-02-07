@@ -2,7 +2,7 @@ package com.redmadrobot.numberrecognizer
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.redmadrobot.numberrecognizer.ui.main.MainFragment
+import com.redmadrobot.numberrecognizer.ui.RecognitionFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -11,7 +11,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.main_activity)
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
-                .replace(R.id.container, MainFragment.newInstance())
+                .replace(R.id.container, RecognitionFragment.newInstance())
                 .commitNow()
         }
     }
