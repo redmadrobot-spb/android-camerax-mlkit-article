@@ -156,19 +156,8 @@ class RecognitionFragment : Fragment() {
     }
 
     private fun setupCameraMenuIcons() {
-        if (!camera.cameraInfo.hasFlashUnit()) {
-            Timber.tag("RTRT").d("does not have flash")
-            return
-        }
-
         with(binding.toolbar) {
             inflateMenu(R.menu.menu_recognition)
-
-            menu.findItem(R.id.menuFlash)?.setOnMenuItemClickListener {
-                val isFlashOff = flashStateLiveData?.value == TorchState.OFF
-                camera.cameraControl.enableTorch(isFlashOff)
-                true
-            }
 
             menu.findItem(R.id.menuCapture)?.setOnMenuItemClickListener {
                 imageCapture?.let { imageCapture ->
@@ -196,6 +185,18 @@ class RecognitionFragment : Fragment() {
             }
         }
 
+        val menuFlash = binding.toolbar.menu.findItem(R.id.menuFlash)
+        if (!camera.cameraInfo.hasFlashUnit()) {
+            menuFlash?.isVisible = false
+            return
+        }
+
+        menuFlash?.setOnMenuItemClickListener {
+            val isFlashOff = flashStateLiveData?.value == TorchState.OFF
+            camera.cameraControl.enableTorch(isFlashOff)
+            true
+        }
+
         flashStateLiveData = camera.cameraInfo.torchState
         flashStateLiveData?.observe(viewLifecycleOwner) { torchState ->
             val newFlashIconRes = when (torchState) {
@@ -205,7 +206,7 @@ class RecognitionFragment : Fragment() {
 
             binding.toolbar.menu
                 .findItem(R.id.menuFlash)
-                .setIcon(newFlashIconRes)
+                ?.setIcon(newFlashIconRes)
         }
     }
 
