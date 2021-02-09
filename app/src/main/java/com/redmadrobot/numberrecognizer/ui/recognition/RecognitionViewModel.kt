@@ -1,4 +1,4 @@
-package com.redmadrobot.numberrecognizer.ui
+package com.redmadrobot.numberrecognizer.ui.recognition
 
 import android.graphics.Bitmap
 import androidx.camera.core.ImageProxy

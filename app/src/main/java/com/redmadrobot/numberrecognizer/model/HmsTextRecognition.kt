@@ -1,21 +1,46 @@
 package com.redmadrobot.numberrecognizer.model
 
+import android.graphics.Bitmap
+import android.media.Image
 import android.view.Surface
+import com.huawei.hmf.tasks.Task
+import com.huawei.hms.mlsdk.MLAnalyzerFactory
+import com.huawei.hms.mlsdk.common.MLFrame
+import com.huawei.hms.mlsdk.text.MLText
+import com.redmadrobot.numberrecognizer.entity.RecognizedLine
 
 class HmsTextRecognition {
 
-//    private val localAnalyzer = MLAnalyzerFactory.getInstance().localTextAnalyzer
-//
-//    fun processFrame(frame: Image, rotationDegrees: Int): Task<List<RecognizedLine>> {
-//        val mlFrame = MLFrame.fromMediaImage(frame, getHmsQuadrant(rotationDegrees))
-//    }
-//
-//    fun processFrame(bitmap: Bitmap, rotationDegrees: Int): Task<List<RecognizedLine>> {
-//        val mlFrame = MLFrame.fromBitmap(bitmap)
-//    }
+    private val localAnalyzer = MLAnalyzerFactory.getInstance().localTextAnalyzer
 
-//    private fun MLText.TextLine.toRecognizedLine(): RecognizedLine =
-//        RecognizedLine(stringValue)
+    fun processFrame(frame: Image, rotationDegrees: Int): Task<List<RecognizedLine>> {
+        val mlFrame = MLFrame.fromMediaImage(frame, getHmsQuadrant(rotationDegrees))
+
+        return localAnalyzer
+            .asyncAnalyseFrame(mlFrame)
+            .continueWith { task ->
+                task.result
+                    .blocks
+                    .flatMap { block -> block.contents }
+                    .map { line -> line.toRecognizedLine() }
+            }
+    }
+
+    fun processFrame(bitmap: Bitmap, rotationDegrees: Int): Task<List<RecognizedLine>> {
+        val mlFrame = MLFrame.fromBitmap(bitmap)
+
+        return localAnalyzer
+            .asyncAnalyseFrame(mlFrame)
+            .continueWith { task ->
+                task.result
+                    .blocks
+                    .flatMap { block -> block.contents }
+                    .map { line -> line.toRecognizedLine() }
+            }
+    }
+
+    private fun MLText.TextLine.toRecognizedLine(): RecognizedLine =
+        RecognizedLine(stringValue)
 
     private fun getHmsQuadrant(rotationDegrees: Int): Int =
         when (rotationDegrees) {

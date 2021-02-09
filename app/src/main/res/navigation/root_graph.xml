@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_graph"
+    app:startDestination="@id/mainFragment">
+
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.redmadrobot.numberrecognizer.ui.MainFragment"
+        tools:layout="@layout/fragment_main">
+        <action
+            android:id="@+id/actionMainFragmentToRecognitionFragment"
+            app:destination="@id/recognitionFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/recognitionFragment"
+        android:name="com.redmadrobot.numberrecognizer.ui.recognition.RecognitionFragment"
+        tools:layout="@layout/fragment_recognition" />
+
+</navigation>

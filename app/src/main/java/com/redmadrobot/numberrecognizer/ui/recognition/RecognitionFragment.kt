@@ -1,4 +1,4 @@
-package com.redmadrobot.numberrecognizer.ui
+package com.redmadrobot.numberrecognizer.ui.recognition
 
 import android.Manifest
 import android.content.Context
@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.Surface
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.camera.core.AspectRatio
 import androidx.camera.core.Camera
 import androidx.camera.core.CameraSelector
@@ -25,8 +26,9 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.redmadrobot.numberrecognizer.R
-import com.redmadrobot.numberrecognizer.databinding.MainFragmentBinding
+import com.redmadrobot.numberrecognizer.databinding.FragmentRecognitionBinding
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -52,17 +54,20 @@ class RecognitionFragment : Fragment() {
         ImageAnalysis.Analyzer(viewModel::onFrameReceived)
     }
 
-    private var _binding: MainFragmentBinding? = null
+    private var _binding: FragmentRecognitionBinding? = null
     private val binding
         get() = requireNotNull(_binding)
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = MainFragmentBinding.inflate(inflater, container, false)
-        return binding.root
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        requireActivity()
+            .onBackPressedDispatcher
+            .addCallback(this, object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    findNavController().popBackStack()
+                }
+            })
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -70,12 +75,25 @@ class RecognitionFragment : Fragment() {
         viewModel = ViewModelProvider(this).get(RecognitionViewModel::class.java)
     }
 
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentRecognitionBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
     @ExperimentalUseCaseGroup
     @ExperimentalUseCaseGroupLifecycle
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        with(binding.toolbar) {
+            title = getString(R.string.mlkit)
+            setNavigationIcon(R.drawable.ic_back)
+            setNavigationOnClickListener { activity?.onBackPressed() }
+        }
         outputDirectory = getOutputDirectory(requireContext())
-        binding.toolbar.title = getString(R.string.app_name)
         startCameraWithPermissionCheck()
     }
 

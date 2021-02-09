@@ -17,19 +17,21 @@
             android:name="com.google.mlkit.vision.DEPENDENCIES"
             android:value="ocr" />
 
-        <!--        <meta-data-->
-        <!--            android:name="com.huawei.hms.ml.DEPENDENCY"-->
-        <!--            android:value="ocr" />-->
+        <meta-data
+            android:name="com.huawei.hms.ml.DEPENDENCY"
+            android:value="ocr" />
 
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".ui.AppActivity"
             android:screenOrientation="portrait">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
+
     </application>
 
 </manifest>
