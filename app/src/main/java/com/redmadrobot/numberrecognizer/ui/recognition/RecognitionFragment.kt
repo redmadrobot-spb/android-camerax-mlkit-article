@@ -64,10 +64,7 @@ class RecognitionFragment : Fragment() {
                     findNavController().popBackStack()
                 }
             })
-    }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this).get(RecognitionViewModel::class.java)
     }
 
@@ -84,6 +81,10 @@ class RecognitionFragment : Fragment() {
     @ExperimentalUseCaseGroupLifecycle
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        viewModel.recognitionResultLiveData.observe(viewLifecycleOwner) { lines ->
+            binding.resultsTextView.text = lines.joinToString("\n") { it.text }
+        }
         with(binding.toolbar) {
             title = getString(R.string.mlkit)
             setNavigationIcon(R.drawable.ic_back)
