@@ -1,6 +1,5 @@
 package com.redmadrobot.numberrecognizer.ui.recognition
 
-import android.Manifest
 import android.content.Context
 import android.graphics.BitmapFactory
 import android.net.Uri
@@ -36,11 +35,8 @@ import java.util.concurrent.Executors
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
-import permissions.dispatcher.NeedsPermission
-import permissions.dispatcher.RuntimePermissions
 import timber.log.Timber
 
-@RuntimePermissions
 class RecognitionFragment : Fragment() {
 
     private lateinit var viewModel: RecognitionViewModel
@@ -94,7 +90,7 @@ class RecognitionFragment : Fragment() {
             setNavigationOnClickListener { activity?.onBackPressed() }
         }
         outputDirectory = getOutputDirectory(requireContext())
-        startCameraWithPermissionCheck()
+        startCamera()
     }
 
     override fun onDestroyView() {
@@ -102,12 +98,6 @@ class RecognitionFragment : Fragment() {
         _binding = null
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        onRequestPermissionsResult(requestCode, grantResults)
-    }
-
-    @NeedsPermission(Manifest.permission.CAMERA)
     @ExperimentalUseCaseGroup
     @ExperimentalUseCaseGroupLifecycle
     fun startCamera() {
@@ -246,7 +236,5 @@ class RecognitionFragment : Fragment() {
                 .format(System.currentTimeMillis()) + ".jpg"
             return File(baseFolder, fileName)
         }
-
-        fun newInstance() = RecognitionFragment()
     }
 }
