@@ -19,4 +19,9 @@
         android:name="com.redmadrobot.numberrecognizer.ui.recognition.RecognitionFragment"
         tools:layout="@layout/fragment_recognition" />
 
+    <activity
+        android:id="@+id/readEmvCard"
+        android:name="com.redmadrobot.numberrecognizer.ui.reademv.ReadEmvCardActivity"
+        tools:layout="@layout/activity_read_emv_card" />
+
 </navigation>

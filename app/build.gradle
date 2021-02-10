@@ -74,4 +74,7 @@ dependencies {
 
     // card.io
     implementation 'io.card:android-sdk:5.5.1'
+
+    // EMV card reader
+    implementation 'com.github.devnied.emvnfccard:library:3.0.1'
 }

@@ -31,6 +31,19 @@
         tools:text="@string/capture" />
 
     <Button
+        android:id="@+id/readEmvButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:text="@string/read_emv"
+        android:textAllCaps="false"
+        app:layout_constraintBottom_toTopOf="@+id/mlkitButton"
+        app:layout_constraintEnd_toEndOf="@+id/cardioButton"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/cardioButton"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <Button
         android:id="@+id/mlkitButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

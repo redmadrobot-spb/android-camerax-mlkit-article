@@ -4,4 +4,6 @@
     <string name="capture">Capture</string>
     <string name="mlkit">CameraX + ML kit</string>
     <string name="cardio">card.io</string>
+    <string name="read_emv">Read EMV card</string>
+    <string name="read_emv_hint">Hold EMV card near NFC module</string>
 </resources>

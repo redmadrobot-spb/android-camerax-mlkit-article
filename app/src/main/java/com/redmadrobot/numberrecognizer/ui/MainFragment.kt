@@ -37,6 +37,7 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.toolbar.title = getString(R.string.app_name)
+        binding.readEmvButton.setOnClickListener { findNavController().navigate(R.id.readEmvCard) }
         binding.mlkitButton.setOnClickListener { startMlKitRecognitionWithPermissionCheck() }
         binding.cardioButton.setOnClickListener { startCardIORecognitionWithPermissionCheck() }
     }

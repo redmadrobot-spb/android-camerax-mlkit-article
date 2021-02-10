@@ -2,7 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.redmadrobot.numberrecognizer">
 
+    <uses-permission android:name="android.permission.NFC" />
     <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-feature android:name="android.hardware.nfc" />
 
     <application
         android:name=".App"
@@ -31,6 +34,10 @@
             </intent-filter>
 
         </activity>
+
+        <activity
+            android:name=".ui.reademv.ReadEmvCardActivity"
+            android:label="@string/read_emv" />
 
     </application>
 
