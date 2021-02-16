@@ -71,6 +71,7 @@ dependencies {
 
     // HMS ML kit
     implementation 'com.huawei.hms:ml-computer-vision-ocr:2.0.5.300'
+    implementation 'com.huawei.hms:ml-computer-vision-ocr-latin-model:2.0.5.300'
 
     // card.io
     implementation 'io.card:android-sdk:5.5.1'

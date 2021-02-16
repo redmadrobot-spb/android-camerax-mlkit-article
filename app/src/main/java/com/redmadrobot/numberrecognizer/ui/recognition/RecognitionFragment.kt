@@ -23,11 +23,12 @@ import androidx.camera.lifecycle.ExperimentalUseCaseGroupLifecycle
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.redmadrobot.numberrecognizer.R
 import com.redmadrobot.numberrecognizer.databinding.FragmentRecognitionBinding
+import com.redmadrobot.numberrecognizer.getMobileService
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -39,7 +40,9 @@ import timber.log.Timber
 
 class RecognitionFragment : Fragment() {
 
-    private lateinit var viewModel: RecognitionViewModel
+    private val viewModel: RecognitionViewModel by viewModels {
+        RecognitionViewModelFactory(requireContext().getMobileService())
+    }
     private val cameraExecutor = Executors.newSingleThreadExecutor()
     private lateinit var camera: Camera
     private var flashStateLiveData: LiveData<Int>? = null
@@ -64,8 +67,6 @@ class RecognitionFragment : Fragment() {
                     findNavController().popBackStack()
                 }
             })
-
-        viewModel = ViewModelProvider(this).get(RecognitionViewModel::class.java)
     }
 
     override fun onCreateView(

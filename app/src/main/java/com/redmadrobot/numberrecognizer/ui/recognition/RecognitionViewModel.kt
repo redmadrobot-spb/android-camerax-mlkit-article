@@ -4,13 +4,17 @@ import android.graphics.Bitmap
 import androidx.camera.core.ImageProxy
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.redmadrobot.numberrecognizer.MobileService
 import com.redmadrobot.numberrecognizer.entity.RecognizedLine
 import com.redmadrobot.numberrecognizer.model.GmsTextRecognition
+import com.redmadrobot.numberrecognizer.model.HmsTextRecognition
 import timber.log.Timber
 
-class RecognitionViewModel : ViewModel() {
+class RecognitionViewModel(private val mobileService: MobileService) : ViewModel() {
 
-    private val textRecognition = GmsTextRecognition()
+    private val gmsTextRecognition = GmsTextRecognition()
+    private val hmsTextRecognition = HmsTextRecognition()
+
     private var lastTimestampFrameReceived = 0L
 
     val recognitionResultLiveData = MutableLiveData<List<RecognizedLine>>()
@@ -32,24 +36,53 @@ class RecognitionViewModel : ViewModel() {
             imageProxy.close()
             return
         }
-        textRecognition
-            .processFrame(frame, rotationDegrees)
-            .addOnCompleteListener { imageProxy.close() }
-            .addOnSuccessListener {
-                Timber.tag("RTRT").d("Local raw result:$it")
-                recognitionResultLiveData.postValue(it)
+
+        when (mobileService) {
+            MobileService.GMS -> {
+                gmsTextRecognition
+                    .processFrame(frame, rotationDegrees)
+                    .addOnCompleteListener { imageProxy.close() }
+                    .addOnSuccessListener {
+                        Timber.tag("RTRT").d("Local raw result:$it")
+                        recognitionResultLiveData.postValue(it)
+                    }
+                    .addOnFailureListener { Timber.e(it) }
             }
-            .addOnFailureListener { Timber.e(it) }
+            MobileService.HMS -> {
+                hmsTextRecognition
+                    .processFrame(frame, rotationDegrees)
+                    .addOnCompleteListener { imageProxy.close() }
+                    .addOnSuccessListener {
+                        Timber.tag("RTRT").d("Local raw result:$it")
+                        recognitionResultLiveData.postValue(it)
+                    }
+                    .addOnFailureListener { Timber.e(it) }
+            }
+        }
+
     }
 
     fun onFrameCaptured(bitmap: Bitmap, rotationDegrees: Int) {
 
-        textRecognition
-            .processFrame(bitmap, rotationDegrees)
-            .addOnCompleteListener { bitmap.recycle() }
-            .addOnSuccessListener {
-                Timber.tag("RTRT").d("Remote raw result:$it")
+        when (mobileService) {
+            MobileService.GMS -> {
+                gmsTextRecognition
+                    .processFrame(bitmap, rotationDegrees)
+                    .addOnCompleteListener { bitmap.recycle() }
+                    .addOnSuccessListener {
+                        Timber.tag("RTRT").d("Remote raw result:$it")
+                    }
+                    .addOnFailureListener { Timber.e(it) }
             }
-            .addOnFailureListener { Timber.e(it) }
+            MobileService.HMS -> {
+                hmsTextRecognition
+                    .processFrame(bitmap, rotationDegrees)
+                    .addOnCompleteListener { bitmap.recycle() }
+                    .addOnSuccessListener {
+                        Timber.tag("RTRT").d("Remote raw result:$it")
+                    }
+                    .addOnFailureListener { Timber.e(it) }
+            }
+        }
     }
 }
