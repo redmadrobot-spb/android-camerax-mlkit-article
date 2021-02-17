@@ -16,15 +16,31 @@ android {
         versionName "1.0"
     }
 
+    signingConfigs {
+        release {
+            storeFile = file("../release.jks")
+            storePassword = "SuperPassword123"
+            keyAlias = "release_key"
+            keyPassword = "SuperPassword123"
+        }
+    }
+
     buildFeatures {
         viewBinding = true
     }
 
     buildTypes {
+        debug {
+            minifyEnabled false
+            shrinkResources false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+
         release {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
     compileOptions {
