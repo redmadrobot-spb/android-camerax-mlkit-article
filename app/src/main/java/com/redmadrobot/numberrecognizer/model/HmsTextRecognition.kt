@@ -5,13 +5,27 @@ import android.media.Image
 import android.view.Surface
 import com.huawei.hmf.tasks.Task
 import com.huawei.hms.mlsdk.MLAnalyzerFactory
+import com.huawei.hms.mlsdk.common.MLApplication
 import com.huawei.hms.mlsdk.common.MLFrame
+import com.huawei.hms.mlsdk.text.MLRemoteTextSetting
 import com.huawei.hms.mlsdk.text.MLText
+import com.huawei.hms.mlsdk.text.MLTextAnalyzer
 import com.redmadrobot.numberrecognizer.entity.RecognizedLine
 
 class HmsTextRecognition {
 
+    private val remoteAnalyzer: MLTextAnalyzer
     private val localAnalyzer = MLAnalyzerFactory.getInstance().localTextAnalyzer
+
+    init {
+        MLApplication.getInstance().apiKey = "Your apiToken here"
+
+        val settings = MLRemoteTextSetting.Factory()
+            .setTextDensityScene(MLRemoteTextSetting.OCR_COMPACT_SCENE)
+            .create()
+
+        remoteAnalyzer = MLAnalyzerFactory.getInstance().getRemoteTextAnalyzer(settings)
+    }
 
     fun processFrame(frame: Image, rotationDegrees: Int): Task<List<RecognizedLine>> {
         val mlFrame = MLFrame.fromMediaImage(frame, getHmsQuadrant(rotationDegrees))
@@ -29,7 +43,7 @@ class HmsTextRecognition {
     fun processFrame(bitmap: Bitmap, rotationDegrees: Int): Task<List<RecognizedLine>> {
         val mlFrame = MLFrame.fromBitmap(bitmap)
 
-        return localAnalyzer
+        return remoteAnalyzer
             .asyncAnalyseFrame(mlFrame)
             .continueWith { task ->
                 task.result

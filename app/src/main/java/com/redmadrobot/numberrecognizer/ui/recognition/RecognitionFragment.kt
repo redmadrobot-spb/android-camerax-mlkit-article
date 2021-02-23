@@ -83,8 +83,16 @@ class RecognitionFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.recognitionResultLiveData.observe(viewLifecycleOwner) { lines ->
+        viewModel.realtimeResultsLiveData.observe(viewLifecycleOwner) { lines ->
             binding.resultsTextView.text = lines.joinToString("\n") { it.text }
+        }
+
+        viewModel.captureResultsLiveData.observe(viewLifecycleOwner) { lines ->
+            if (lines == null) return@observe
+
+            val results = lines.joinToString("\n") { it.text }
+            val dialog = ResultDialogFragment.create(results)
+            dialog.show(childFragmentManager, ResultDialogFragment::class.simpleName)
         }
         with(binding.toolbar) {
             title = getString(R.string.mlkit)
@@ -138,7 +146,7 @@ class RecognitionFragment : Fragment() {
 
         val useCaseGroup = UseCaseGroup.Builder().run {
             addUseCase(preview)
-            addUseCase(imageAnalyzer)
+            // addUseCase(imageAnalyzer)
             addUseCase(imageCapture!!)
             binding.cameraPreview.viewPort?.let { setViewPort(it) }
             build()
@@ -184,8 +192,6 @@ class RecognitionFragment : Fragment() {
                                 val savedUri = Uri.fromFile(photoFile)
                                 Timber.d("Photo capture succeeded: $savedUri")
 
-//                                val source = ImageDecoder.createSource(requireContext().contentResolver, savedUri)
-//                                val bitmap = ImageDecoder.decodeBitmap(source)
                                 val bitmap = BitmapFactory.decodeFile(photoFile.path)
                                 viewModel.onFrameCaptured(bitmap, 90)
                             }

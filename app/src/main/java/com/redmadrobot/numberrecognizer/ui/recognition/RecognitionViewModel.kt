@@ -17,7 +17,8 @@ class RecognitionViewModel(private val mobileService: MobileService) : ViewModel
 
     private var lastTimestampFrameReceived = 0L
 
-    val recognitionResultLiveData = MutableLiveData<List<RecognizedLine>>()
+    val realtimeResultsLiveData = MutableLiveData<List<RecognizedLine>>()
+    val captureResultsLiveData = MutableLiveData<List<RecognizedLine>>()
 
     @androidx.camera.core.ExperimentalGetImage
     fun onFrameReceived(imageProxy: ImageProxy) {
@@ -43,8 +44,8 @@ class RecognitionViewModel(private val mobileService: MobileService) : ViewModel
                     .processFrame(frame, rotationDegrees)
                     .addOnCompleteListener { imageProxy.close() }
                     .addOnSuccessListener {
-                        Timber.tag("RTRT").d("Local raw result:$it")
-                        recognitionResultLiveData.postValue(it)
+                        Timber.tag("RTRT").d("On-device realtime result:$it")
+                        realtimeResultsLiveData.postValue(it)
                     }
                     .addOnFailureListener { Timber.e(it) }
             }
@@ -53,8 +54,8 @@ class RecognitionViewModel(private val mobileService: MobileService) : ViewModel
                     .processFrame(frame, rotationDegrees)
                     .addOnCompleteListener { imageProxy.close() }
                     .addOnSuccessListener {
-                        Timber.tag("RTRT").d("Local raw result:$it")
-                        recognitionResultLiveData.postValue(it)
+                        Timber.tag("RTRT").d("On-device realtime result:$it")
+                        realtimeResultsLiveData.postValue(it)
                     }
                     .addOnFailureListener { Timber.e(it) }
             }
@@ -70,7 +71,8 @@ class RecognitionViewModel(private val mobileService: MobileService) : ViewModel
                     .processFrame(bitmap, rotationDegrees)
                     .addOnCompleteListener { bitmap.recycle() }
                     .addOnSuccessListener {
-                        Timber.tag("RTRT").d("Remote raw result:$it")
+                        Timber.tag("RTRT").d("On-device from capture result:$it")
+                        captureResultsLiveData.postValue(it)
                     }
                     .addOnFailureListener { Timber.e(it) }
             }
@@ -79,7 +81,8 @@ class RecognitionViewModel(private val mobileService: MobileService) : ViewModel
                     .processFrame(bitmap, rotationDegrees)
                     .addOnCompleteListener { bitmap.recycle() }
                     .addOnSuccessListener {
-                        Timber.tag("RTRT").d("Remote raw result:$it")
+                        Timber.tag("RTRT").d("On-cloud from capture result:$it")
+                        captureResultsLiveData.postValue(it)
                     }
                     .addOnFailureListener { Timber.e(it) }
             }

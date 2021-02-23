@@ -4,4 +4,5 @@
     <string name="capture">Capture</string>
     <string name="mlkit">CameraX + ML kit</string>
     <string name="cardio">card.io</string>
+    <string name="results_title">Recognized lines</string>
 </resources>
