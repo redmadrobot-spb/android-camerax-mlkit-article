@@ -146,7 +146,7 @@ class RecognitionFragment : Fragment() {
 
         val useCaseGroup = UseCaseGroup.Builder().run {
             addUseCase(preview)
-            // addUseCase(imageAnalyzer)
+            addUseCase(imageAnalyzer)
             addUseCase(imageCapture!!)
             binding.cameraPreview.viewPort?.let { setViewPort(it) }
             build()
