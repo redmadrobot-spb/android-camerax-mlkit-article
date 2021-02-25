@@ -15,20 +15,17 @@ class RecognitionViewModel(private val mobileService: MobileService) : ViewModel
     private val gmsTextRecognition = GmsTextRecognition()
     private val hmsTextRecognition = HmsTextRecognition()
 
-    private var lastTimestampFrameReceived = 0L
+    private var startCycleComputingFpsTimestamp = 0L
+    private var framesCounter = 0
 
     val realtimeResultsLiveData = MutableLiveData<List<RecognizedLine>>()
     val captureResultsLiveData = MutableLiveData<List<RecognizedLine>>()
+    val fpsLiveData = MutableLiveData<Int>()
 
     @androidx.camera.core.ExperimentalGetImage
     fun onFrameReceived(imageProxy: ImageProxy) {
-        val currentTimestamp = System.currentTimeMillis()
-        val diff = currentTimestamp - lastTimestampFrameReceived
-        if (diff < 1000) {
-            imageProxy.close()
-            return
-        }
-        lastTimestampFrameReceived = currentTimestamp
+
+        recomputeFps()
 
         val frame = imageProxy.image
         val rotationDegrees = imageProxy.imageInfo.rotationDegrees
@@ -64,7 +61,6 @@ class RecognitionViewModel(private val mobileService: MobileService) : ViewModel
     }
 
     fun onFrameCaptured(bitmap: Bitmap, rotationDegrees: Int) {
-
         when (mobileService) {
             MobileService.GMS -> {
                 gmsTextRecognition
@@ -86,6 +82,23 @@ class RecognitionViewModel(private val mobileService: MobileService) : ViewModel
                     }
                     .addOnFailureListener { Timber.e(it) }
             }
+        }
+    }
+
+    private fun recomputeFps() {
+        val currentTimestamp = System.currentTimeMillis()
+        if (startCycleComputingFpsTimestamp == 0L) {
+            startCycleComputingFpsTimestamp = currentTimestamp
+            return
+        }
+
+        val diff = currentTimestamp - startCycleComputingFpsTimestamp
+        if (diff < 1000) {
+            framesCounter++
+        } else {
+            fpsLiveData.postValue(framesCounter)
+            framesCounter = 0
+            startCycleComputingFpsTimestamp = currentTimestamp
         }
     }
 }

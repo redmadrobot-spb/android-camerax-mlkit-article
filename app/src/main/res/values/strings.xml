@@ -5,4 +5,6 @@
     <string name="mlkit">CameraX + ML kit</string>
     <string name="cardio">card.io</string>
     <string name="results_title">Recognized lines</string>
+    <string name="recognition_failed">Recognition failed</string>
+    <string name="fps_placeholder">%s fps</string>
 </resources>

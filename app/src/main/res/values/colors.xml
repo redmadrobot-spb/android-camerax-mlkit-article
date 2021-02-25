@@ -12,4 +12,7 @@
     <color name="primaryLightColor">#ff7b5f</color>
     <color name="primaryDarkColor">#c40007</color>
     <color name="primaryTextColor">#000000</color>
+
+    <color name="success">#00FF00</color>
+    <color name="error">#FF0000</color>
 </resources>

@@ -84,15 +84,35 @@ class RecognitionFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.realtimeResultsLiveData.observe(viewLifecycleOwner) { lines ->
-            binding.resultsTextView.text = lines.joinToString("\n") { it.text }
-        }
+            val textLines = lines.map { it.text }
 
+            binding.resultsTextView.text = textLines.joinToString("\n")
+
+            val number = textLines.firstOrNull { line ->
+                val subNumbers = line.split(" ")
+                subNumbers.isNotEmpty() && subNumbers.flatMap { it.asIterable() }.all { it.isDigit() }
+            }
+
+            if (number != null && number.replace(" ", "").length >= 16) {
+                val previousText = binding.succeedResultsTextView.text
+                binding.succeedResultsTextView.text = String.format("%s\n%s", previousText, number)
+
+                binding.numberTextView.text = number
+                binding.numberTextView.setTextColor(ContextCompat.getColor(requireContext(), R.color.success))
+            } else {
+                binding.numberTextView.text = getString(R.string.recognition_failed)
+                binding.numberTextView.setTextColor(ContextCompat.getColor(requireContext(), R.color.error))
+            }
+        }
         viewModel.captureResultsLiveData.observe(viewLifecycleOwner) { lines ->
             if (lines == null) return@observe
 
             val results = lines.joinToString("\n") { it.text }
             val dialog = ResultDialogFragment.create(results)
             dialog.show(childFragmentManager, ResultDialogFragment::class.simpleName)
+        }
+        viewModel.fpsLiveData.observe(viewLifecycleOwner) {
+            binding.fpsTextView.text = getString(R.string.fps_placeholder, it.toString())
         }
         with(binding.toolbar) {
             title = getString(R.string.mlkit)
