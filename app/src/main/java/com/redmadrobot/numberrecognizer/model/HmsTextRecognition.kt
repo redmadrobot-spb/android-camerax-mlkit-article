@@ -14,17 +14,15 @@ import com.redmadrobot.numberrecognizer.entity.RecognizedLine
 
 class HmsTextRecognition {
 
-    private val remoteAnalyzer: MLTextAnalyzer
     private val localAnalyzer = MLAnalyzerFactory.getInstance().localTextAnalyzer
-
-    init {
+    private val remoteAnalyzer: MLTextAnalyzer by lazy {
         MLApplication.getInstance().apiKey = "Your apiToken here"
 
         val settings = MLRemoteTextSetting.Factory()
             .setTextDensityScene(MLRemoteTextSetting.OCR_COMPACT_SCENE)
             .create()
 
-        remoteAnalyzer = MLAnalyzerFactory.getInstance().getRemoteTextAnalyzer(settings)
+        MLAnalyzerFactory.getInstance().getRemoteTextAnalyzer(settings)
     }
 
     fun processFrame(frame: Image, rotationDegrees: Int): Task<List<RecognizedLine>> {
